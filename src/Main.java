@@ -9,8 +9,8 @@ import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
-        String fileName = "C:\\Users\\Admin\\Desktop\\Diploma\\Technologies.txt"; //создаем строковую переменную и инициализируем ее адресом(путем к) нашего файла, в
-        //котором мы хотим посчитать байты
+        String fileName = "pathToFile"; //создаем строковую переменную и инициализируем
+        // ее адресом(путем к) нашего файла
         sumOfAllBytesInFile(fileName);
         searchMaximumByte(fileName);
         searchMinimumByte(fileName);
