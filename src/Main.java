@@ -14,6 +14,11 @@ public class Main {
         searchMaximumByte(fileName);
         searchMinimumByte(fileName);
         sortBytesAscending(fileName);
+
+        writeDataToFile(file);
+        writeDataToFileWithoutDeleteOldData(file);
+        readDataAndPrintToTheConsole(file);
+        readDataAndPrintToTheConsoleWithBufferedInputStream(file);
     }
 
     public static void sumOfAllBytesInFile(String pathToFile) { //метод для подсчета всех байтов в указанном файле
