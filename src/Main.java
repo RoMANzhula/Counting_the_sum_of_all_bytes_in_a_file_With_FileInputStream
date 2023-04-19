@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -11,6 +8,8 @@ public class Main {
     public static void main(String[] args) {
         String fileName = "pathToFile"; //создаем строковую переменную и инициализируем
         // ее адресом(путем к) нашего файла
+        File file = new File("pathToFile2"); //создаем новый файл (указываем путь к нему)
+
         sumOfAllBytesInFile(fileName);
         searchMaximumByte(fileName);
         searchMinimumByte(fileName);
@@ -100,5 +99,65 @@ public class Main {
         } catch (IOException e) { //ловим исключения входного/выходного потока
             e.printStackTrace(); //выводим стек для пойманного исключения
         }
+    }
+
+    public static void writeDataToFile(File pathToFile) { //метод, который будет писать данные в указанный файл
+        try (FileOutputStream fileToOutputStream = new FileOutputStream(pathToFile)) { //в блоке try-with-resource мы создаем поток
+            //для записи(вывода) данных в указанный файл
+            String dataForWriting = "Good morning my friend!"; //создаем строку, которую мы запишем в файл
+
+            fileToOutputStream.write(dataForWriting.getBytes()); //пишем в файл строку, преобразованную в баты
+
+        } catch (IOException e) { //ловим исключения входящего/исходящего потока
+            e.printStackTrace(); //выводим исключение в стек
+        }
+    }
+
+    public static void writeDataToFileWithoutDeleteOldData(File pathToFile) { //метод, который будет дописывать данные в указанный
+        //файл, при этом не стирая уже существующие данные
+        try (FileOutputStream fileToOutputStream = new FileOutputStream(pathToFile, true)) { //в блоке try-with-resource мы создаем поток
+            //для записи(вывода) данных в указанный файл и указываем для boolean append значение = true (по умолчанию false),
+            //что позволит дописать данные в файл, при этом не стирая уже существующие данные в файле
+            String dataForWriting = "\n Good afternoon my friend!\r\n"; //создаем строку, которую мы допишем в файл (с переносами
+            //на новую строку)
+
+            fileToOutputStream.write(dataForWriting.getBytes()); //пишем в файл строку, преобразованную в баты
+
+        } catch (IOException e) { //ловим исключения входящего/исходящего потока
+            e.printStackTrace(); //выводим исключение в стек
+        }
+        //закрытие потоков в блоке try-with-resource выполняется автоматически
+    }
+
+    public static void readDataAndPrintToTheConsole(File pathToFile) { //метод, который будет считывать данные из указанного
+        //файла и выводить эти данные на консоль
+        try (FileInputStream fileInputStream = new FileInputStream(pathToFile)) { //открываем поток для ввода(считывания) данных
+            //из указанного файла
+            int containerForOneByte; //создаем переменную-контейнер для побайтового считывания
+            while ((containerForOneByte = fileInputStream.read()) != -1) { //считываем по одному байту во временный контейнер для одного
+                //байта
+                System.out.println((char) containerForOneByte); //выполняем приведение типа к символу и выводим каждый символ в консоль
+            }
+        } catch (IOException e) { //ловим исключения входящего/исходящего потока
+            e.printStackTrace(); //выводим исключение в стек
+        }
+        //закрытие потоков в блоке try-with-resource выполняется автоматически
+    }
+
+    public static void readDataAndPrintToTheConsoleWithBufferedInputStream(File pathToFile) { //метод, который будет считывать данные из указанного
+        //файла и выводить эти данные на консоль быстрее предидущего метода за счет буферизации данных
+        try (FileInputStream fileInputStream = new FileInputStream(pathToFile)) { //открываем поток для ввода(считывания) данных
+            //из указанного файла
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream); //расширяем наш входной поток
+            //до буферизированного потока, в котором метод read() работает в разы быстрее
+            int containerForOneByte; //создаем переменную-контейнер для побайтового считывания
+            while ((containerForOneByte = bufferedInputStream.read()) != -1) { //считываем по одному байту во временный контейнер для одного
+                //байта
+                System.out.println((char) containerForOneByte); //выполняем приведение типа к символу и выводим каждый символ в консоль
+            }
+        } catch (IOException e) { //ловим исключения входящего/исходящего потока
+            e.printStackTrace(); //выводим исключение в стек
+        }
+        //закрытие потоков в блоке try-with-resource выполняется автоматически
     }
 }
