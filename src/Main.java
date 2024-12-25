@@ -6,163 +6,152 @@ import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
-        String fileName = "pathToFile"; //создаем строковую переменную и инициализируем
-        // ее адресом(путем к) нашего файла
-        File file = new File("pathToFile2"); //создаем новый файл (указываем путь к нему)
-
+        String fileName = "pathToFile"; //створюємо змінну для шляху до файлу
+        File file = new File("pathToFile2"); //створюємо новий файл, вказуючи шлях до нього
+    
         sumOfAllBytesInFile(fileName);
         searchMaximumByte(fileName);
         searchMinimumByte(fileName);
         sortBytesAscending(fileName);
-
+    
         writeDataToFile(file);
         writeDataToFileWithoutDeleteOldData(file);
         readDataAndPrintToTheConsole(file);
         readDataAndPrintToTheConsoleWithBufferedInputStream(file);
     }
-
-    public static void sumOfAllBytesInFile(String pathToFile) { //метод для подсчета всех байтов в указанном файле
-
-        long containerForBytes = 0; //создаем 64-битный контейнер для подсчета байтов
-        try (FileInputStream fileInputStream = new FileInputStream(pathToFile)) {//создаем поток для последовательного ввода данных
-            //из указанного файла в блоке try-with-resource(который в свою очередь автоматически освобождает ресурсы, закрывая потоки)
-
-            while (fileInputStream.available() > 0) { //будет выполнять цикл, пока в потоке для чтения есть еще байты
-                int dataForRead = fileInputStream.read(); //считываем следующий байт
-                containerForBytes += dataForRead; //добавляем считанный байт в наш контейнер байтов
+    
+    public static void sumOfAllBytesInFile(String pathToFile) { //метод для підрахунку всіх байтів в зазначеному файлі
+    
+        long containerForBytes = 0; //створюємо 64-бітний контейнер для підрахунку байтів
+        try (FileInputStream fileInputStream = new FileInputStream(pathToFile)) { //створюємо потік для послідовного введення даних з файлу
+            while (fileInputStream.available() > 0) { //поки в потоці є байти
+                int dataForRead = fileInputStream.read(); //читаємо наступний байт
+                containerForBytes += dataForRead; //додаємо байт до нашого контейнера
             }
-
-        } catch (IOException ioException) { //ловим исключение для входного/выходного потока
-            ioException.printStackTrace(); //выводим исключение в стек
+    
+        } catch (IOException ioException) { //ловимо виняток для потоку вводу/виводу
+            ioException.printStackTrace(); //виводимо виняток у стек
         }
-        System.out.println("The sum of all bytes in your file: " + containerForBytes); //выводим в консоль данные
+        System.out.println("The sum of all bytes in your file: " + containerForBytes); //виводимо суму всіх байтів у консоль
     }
-
-    public static void searchMaximumByte(String pathToFile) { //метод для поиска максимального байта в указанном файле
-        ArrayList<Long> arrayListForReadBytes = new ArrayList<>(); //создаем коллекцию типа интерфейса ArrayList<Long> для хранения байтов,
-        //прочитанных из указанного файла
-
-        try (FileInputStream fileInputStream = new FileInputStream(pathToFile)) { //создаем поток для последовательного ввода данных
-            //из указанного файла в блоке try-with-resource(который в свою очередь автоматически освобождает ресурсы, закрывая потоки)
-            while (fileInputStream.available() > 0) { //запускаем цикл пока(есть еще непрочитанные байты)
-                long containerForBytes = fileInputStream.read();//создаем контейнер для байтов в виде переменной и читаем
-                // очередной байт в данную переменную
-                arrayListForReadBytes.add(containerForBytes);//заполняем список байтами
+    
+    public static void searchMaximumByte(String pathToFile) { //метод для пошуку максимального байта в зазначеному файлі
+        ArrayList<Long> arrayListForReadBytes = new ArrayList<>(); //створюємо колекцію для збереження байтів, прочитаних з файлу
+    
+        try (FileInputStream fileInputStream = new FileInputStream(pathToFile)) { //створюємо потік для вводу з файлу
+            while (fileInputStream.available() > 0) { //запускаємо цикл поки є непрочитані байти
+                long containerForBytes = fileInputStream.read(); //читаємо черговий байт
+                arrayListForReadBytes.add(containerForBytes); //додаємо байт у список
             }
-            System.out.println("This is the maximum byte in your file: " + Collections.max(arrayListForReadBytes));//выводим в консоль -
-            // функция super-класс Коллекции - вывести максимальное число(из коллекции)
-
+            System.out.println("This is the maximum byte in your file: " + Collections.max(arrayListForReadBytes)); //виводимо максимальний байт
+    
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void searchMinimumByte(String pathToFile) { //метод для пошуку мінімального байта в зазначеному файлі
+        ArrayList<Long> arrayListForReadBytes = new ArrayList<>(); //створюємо колекцію для збереження байтів, прочитаних з файлу
+    
+        try (FileInputStream fileInputStream = new FileInputStream(pathToFile)) { //створюємо потік для вводу з файлу
+            while (fileInputStream.available() > 0) { //поки є непрочитані байти
+                long containerForBytes = fileInputStream.read(); //читаємо черговий байт
+                arrayListForReadBytes.add(containerForBytes); //додаємо байт у список
+            }
+            System.out.println("This is the minimum byte in your file: " + Collections.min(arrayListForReadBytes)); //виводимо мінімальний байт
+    
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void searchMinimumByte(String pathToFile) { //метод для поиска минимального байта в указанном файле
-        ArrayList<Long> arrayListForReadBytes = new ArrayList<>(); //создаем коллекцию типа интерфейса ArrayList<Long> для хранения байтов,
-        //прочитанных из указанного файла
-
-        try (FileInputStream fileInputStream = new FileInputStream(pathToFile)) { //создаем поток для последовательного ввода данных
-            //из указанного файла в блоке try-with-resource(который в свою очередь автоматически освобождает ресурсы, закрывая потоки)
-            while (fileInputStream.available() > 0) { //запускаем цикл пока(есть еще непрочитанные байты)
-                long containerForBytes = fileInputStream.read();//создаем контейнер для байтов в виде переменной и читаем
-                // очередной байт в данную переменную
-                arrayListForReadBytes.add(containerForBytes);//заполняем список байтами
+    public static void sortBytesAscending(String pathToFile) { // метод для пошуку мінімального байта у вказаному файлі
+        ArrayList<Long> arrayListForReadBytes = new ArrayList<>(); // створюємо колекцію типу ArrayList<Long> для зберігання байтів,
+        // прочитаних з вказаного файлу
+    
+        try (FileInputStream fileInputStream = new FileInputStream(pathToFile)) { // створюємо потік для послідовного введення даних
+            // з вказаного файлу в блоці try-with-resource (який автоматично звільняє ресурси, закриваючи потоки)
+            while (fileInputStream.available() > 0) { // запускаємо цикл, поки (є ще непрочитані байти)
+                long containerForBytes = fileInputStream.read(); // створюємо контейнер для байтів у вигляді змінної і читаємо
+                // черговий байт у цю змінну
+                arrayListForReadBytes.add(containerForBytes); // заповнюємо список байтами
             }
-            System.out.println("This is the minimum byte in your file: " + Collections.min(arrayListForReadBytes));//выводим в консоль -
-            // функция super-класс Коллекции - вывести минимальное число(из коллекции)
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public static void sortBytesAscending(String pathToFile) { //метод для поиска минимального байта в указанном файле
-        ArrayList<Long> arrayListForReadBytes = new ArrayList<>(); //создаем коллекцию типа интерфейса ArrayList<Long> для хранения байтов,
-        //прочитанных из указанного файла
-
-        try (FileInputStream fileInputStream = new FileInputStream(pathToFile)) { //создаем поток для последовательного ввода данных
-            //из указанного файла в блоке try-with-resource(который в свою очередь автоматически освобождает ресурсы, закрывая потоки)
-            while (fileInputStream.available() > 0) { //запускаем цикл пока(есть еще непрочитанные байты)
-                long containerForBytes = fileInputStream.read();//создаем контейнер для байтов в виде переменной и читаем
-                // очередной байт в данную переменную
-                arrayListForReadBytes.add(containerForBytes);//заполняем список байтами
+    
+            Collections.sort(arrayListForReadBytes); // використовуємо метод sort() з класу Collections для сортування списку
+            // в порядку зростання
+            Set<Long> sortBytesForSet = new HashSet<>(arrayListForReadBytes); // створюємо Set, який забезпечить унікальність нашого списку байтів
+            // тобто позбавить нас від повторюваних елементів
+            arrayListForReadBytes.clear(); // очищаємо список всіх байтів
+            arrayListForReadBytes.addAll(sortBytesForSet); // заповнюємо список байтами з Set
+            System.out.print("Для вашої уваги, відсортовані байти з вашого файлу: "); // виводимо в консоль повідомлення
+            for (long elementOfArray : arrayListForReadBytes) { // використовуємо for-each для виведення кожного елемента з нашого списку
+                // вже відсортованих байтів
+                System.out.print(elementOfArray + " "); // кожен елемент виводимо через пробіл
             }
-
-            Collections.sort(arrayListForReadBytes); //используем супер-класса Collections метод sort() сортировки указанного
-            // списка в порядке возрастания
-            Set<Long> sortBytesForSet = new HashSet<>(arrayListForReadBytes); //создаем Сэт, который обеспечит нашему списку байтов
-            //уникальность, т.е. избавит нас то повторяющихся экземпляров
-            arrayListForReadBytes.clear(); //очищаем наш список всех байтов
-            arrayListForReadBytes.addAll(sortBytesForSet); //заполняем наш список всех байтов значениями из Сэта
-            System.out.print("For your attention sorted bytes from your file: "); //в консоль выводим литерал
-            for (long elementOfArray : arrayListForReadBytes) { //используем or-each для вывода каждого элемента из нашего списка
-                //уже отсортированных байтов
-                System.out.print(elementOfArray + " "); //каждый элемент выводим их через пробел
+    
+        } catch (IOException e) { // ловимо виключення введення/виведення
+            e.printStackTrace(); // виводимо стек для пойманого виключення
+        }
+    }
+    
+    public static void writeDataToFile(File pathToFile) { // метод, який записуватиме дані у вказаний файл
+        try (FileOutputStream fileToOutputStream = new FileOutputStream(pathToFile)) { // в блоці try-with-resource створюємо потік
+            // для запису даних у вказаний файл
+            String dataForWriting = "Доброго ранку, мій друже!"; // створюємо рядок, який запишемо у файл
+    
+            fileToOutputStream.write(dataForWriting.getBytes()); // записуємо в файл рядок, перетворений на байти
+    
+        } catch (IOException e) { // ловимо виключення потоку введення/виведення
+            e.printStackTrace(); // виводимо виключення в стек
+        }
+    }
+    
+    public static void writeDataToFileWithoutDeleteOldData(File pathToFile) { // метод, який дописуватиме дані у вказаний
+        // файл, не стираючи вже існуючі дані
+        try (FileOutputStream fileToOutputStream = new FileOutputStream(pathToFile, true)) { // в блоці try-with-resource створюємо потік
+            // для запису даних у вказаний файл і вказуємо для boolean append значення true (за замовчуванням false),
+            // що дозволить дописувати дані у файл, не стираючи вже існуючі дані
+            String dataForWriting = "\n Добрий день, мій друже!\r\n"; // створюємо рядок, який допишемо в файл (з переносами
+            // на нову стрічку)
+    
+            fileToOutputStream.write(dataForWriting.getBytes()); // записуємо в файл рядок, перетворений на байти
+    
+        } catch (IOException e) { // ловимо виключення потоку введення/виведення
+            e.printStackTrace(); // виводимо виключення в стек
+        }
+        // закриття потоків в блоці try-with-resource виконується автоматично
+    }
+    
+    public static void readDataAndPrintToTheConsole(File pathToFile) { // метод, який буде зчитувати дані з вказаного
+        // файлу і виводити ці дані на консоль
+        try (FileInputStream fileInputStream = new FileInputStream(pathToFile)) { // відкриваємо потік для введення (зчитування) даних
+            // з вказаного файлу
+            int containerForOneByte; // створюємо змінну-контейнер для побайтового зчитування
+            while ((containerForOneByte = fileInputStream.read()) != -1) { // зчитуємо по одному байту в тимчасовий контейнер для одного
+                // байта
+                System.out.println((char) containerForOneByte); // виконуємо приведення типу до символу і виводимо кожен символ на консоль
             }
-
-        } catch (IOException e) { //ловим исключения входного/выходного потока
-            e.printStackTrace(); //выводим стек для пойманного исключения
+        } catch (IOException e) { // ловимо виключення потоку введення/виведення
+            e.printStackTrace(); // виводимо виключення в стек
         }
+        // закриття потоків в блоці try-with-resource виконується автоматично
     }
-
-    public static void writeDataToFile(File pathToFile) { //метод, который будет писать данные в указанный файл
-        try (FileOutputStream fileToOutputStream = new FileOutputStream(pathToFile)) { //в блоке try-with-resource мы создаем поток
-            //для записи(вывода) данных в указанный файл
-            String dataForWriting = "Good morning my friend!"; //создаем строку, которую мы запишем в файл
-
-            fileToOutputStream.write(dataForWriting.getBytes()); //пишем в файл строку, преобразованную в баты
-
-        } catch (IOException e) { //ловим исключения входящего/исходящего потока
-            e.printStackTrace(); //выводим исключение в стек
-        }
-    }
-
-    public static void writeDataToFileWithoutDeleteOldData(File pathToFile) { //метод, который будет дописывать данные в указанный
-        //файл, при этом не стирая уже существующие данные
-        try (FileOutputStream fileToOutputStream = new FileOutputStream(pathToFile, true)) { //в блоке try-with-resource мы создаем поток
-            //для записи(вывода) данных в указанный файл и указываем для boolean append значение = true (по умолчанию false),
-            //что позволит дописать данные в файл, при этом не стирая уже существующие данные в файле
-            String dataForWriting = "\n Good afternoon my friend!\r\n"; //создаем строку, которую мы допишем в файл (с переносами
-            //на новую строку)
-
-            fileToOutputStream.write(dataForWriting.getBytes()); //пишем в файл строку, преобразованную в баты
-
-        } catch (IOException e) { //ловим исключения входящего/исходящего потока
-            e.printStackTrace(); //выводим исключение в стек
-        }
-        //закрытие потоков в блоке try-with-resource выполняется автоматически
-    }
-
-    public static void readDataAndPrintToTheConsole(File pathToFile) { //метод, который будет считывать данные из указанного
-        //файла и выводить эти данные на консоль
-        try (FileInputStream fileInputStream = new FileInputStream(pathToFile)) { //открываем поток для ввода(считывания) данных
-            //из указанного файла
-            int containerForOneByte; //создаем переменную-контейнер для побайтового считывания
-            while ((containerForOneByte = fileInputStream.read()) != -1) { //считываем по одному байту во временный контейнер для одного
-                //байта
-                System.out.println((char) containerForOneByte); //выполняем приведение типа к символу и выводим каждый символ в консоль
+    
+    public static void readDataAndPrintToTheConsoleWithBufferedInputStream(File pathToFile) { // метод, який буде зчитувати дані з вказаного
+        // файлу і виводити ці дані на консоль швидше попереднього методу завдяки буферизації даних
+        try (FileInputStream fileInputStream = new FileInputStream(pathToFile)) { // відкриваємо потік для введення (зчитування) даних
+            // з вказаного файлу
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream); // розширюємо наш вхідний потік
+            // до буферизованого потоку, в якому метод read() працює значно швидше
+            int containerForOneByte; // створюємо змінну-контейнер для побайтового зчитування
+            while ((containerForOneByte = bufferedInputStream.read()) != -1) { // зчитуємо по одному байту в тимчасовий контейнер для одного
+                // байта
+                System.out.println((char) containerForOneByte); // виконуємо приведення типу до символу і виводимо кожен символ на консоль
             }
-        } catch (IOException e) { //ловим исключения входящего/исходящего потока
-            e.printStackTrace(); //выводим исключение в стек
+        } catch (IOException e) { // ловимо виключення потоку введення/виведення
+            e.printStackTrace(); // виводимо виключення в стек
         }
-        //закрытие потоков в блоке try-with-resource выполняется автоматически
+        // закриття потоків в блоці try-with-resource виконується автоматично
     }
 
-    public static void readDataAndPrintToTheConsoleWithBufferedInputStream(File pathToFile) { //метод, который будет считывать данные из указанного
-        //файла и выводить эти данные на консоль быстрее предидущего метода за счет буферизации данных
-        try (FileInputStream fileInputStream = new FileInputStream(pathToFile)) { //открываем поток для ввода(считывания) данных
-            //из указанного файла
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream); //расширяем наш входной поток
-            //до буферизированного потока, в котором метод read() работает в разы быстрее
-            int containerForOneByte; //создаем переменную-контейнер для побайтового считывания
-            while ((containerForOneByte = bufferedInputStream.read()) != -1) { //считываем по одному байту во временный контейнер для одного
-                //байта
-                System.out.println((char) containerForOneByte); //выполняем приведение типа к символу и выводим каждый символ в консоль
-            }
-        } catch (IOException e) { //ловим исключения входящего/исходящего потока
-            e.printStackTrace(); //выводим исключение в стек
-        }
-        //закрытие потоков в блоке try-with-resource выполняется автоматически
-    }
 }
